@@ -11,4 +11,6 @@ export default {
 }
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+  @import url('./styles/base.css');
+</style>
