@@ -1,4 +1,4 @@
-# fbms
+# FBMS
 
 ## Project setup
 ```
