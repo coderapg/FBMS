@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="login-box">
-      <el-form ref="loginForm" :model="user" :rules="rules" class="login-form">
+      <el-form ref="rulesForm" :model="user" :rules="rules" class="login-form">
         <el-form-item class="logo">
           <el-image :src="logoUrl" fit="content"></el-image>
           <div class="logo-title">后台新闻发布系统</div>
@@ -16,7 +16,7 @@
           <el-checkbox v-model="checked">我已阅读并同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :loading="isLoading" @click="handleLogin">登录</el-button>
+          <el-button type="primary" :loading="isLoading" @click="submitForm">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -50,19 +50,31 @@ export default {
     }
   },
   methods: {
-    handleLogin () {
+    submitForm () {
       this.isLoading = true
-      // const use = Object.assign({}, this.user, { xieyi: true })
+      this.$refs.rulesForm.validate(valid => {
+        console.log('rulesForm', valid)
+        if (valid) {
+          // 手动验证成功
+          this.handleLogin()
+        } else {
+          // 手动验证失败
+          this.isLoading = false
+          return false
+        }
+      })
+    },
+    handleLogin () {
       login(this.user).then(res => {
-        this.isLoading = false
         this.$message({
           message: '登录成功',
           type: 'success'
         })
+        this.isLoading = false
       }).catch(err => {
+        console.log('错误', err)
         this.$message.error('登录失败，手机号或验证码错误')
         this.isLoading = false
-        console.log('错误', err)
       })
     }
   }
