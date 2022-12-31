@@ -33,7 +33,7 @@ export default {
       logoUrl: require('../../assets/image/logo.png'),
       user: {
         mobile: '13521016268',
-        code: '2468'
+        code: '246810'
       },
       rules: {
         mobile: [
@@ -54,14 +54,14 @@ export default {
     submitForm () {
       this.isLoading = true
       this.$refs.rulesForm.validate(valid => {
-        if (valid) {
-          // 手动验证成功
-          this.handleLogin()
-        } else {
+        if (!valid) {
           // 手动验证失败
           this.isLoading = false
           return false
         }
+
+        // 手动验证成功
+        this.handleLogin()
       })
     },
     handleLogin () {
@@ -72,7 +72,7 @@ export default {
         })
         this.isLoading = false
       }).catch(err => {
-        console.log('错误', err)
+        console.log('登录失败', err)
         this.$message.error('登录失败，手机号或验证码错误')
         this.isLoading = false
       })
