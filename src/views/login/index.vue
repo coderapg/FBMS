@@ -12,8 +12,8 @@
         <el-form-item prop="code">
           <el-input v-model="user.code"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-checkbox v-model="checked">我已阅读并同意用户协议和隐私条款</el-checkbox>
+        <el-form-item prop="checked">
+          <el-checkbox v-model="user.checked">我已阅读并同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="isLoading" @click="submitForm">登录</el-button>
@@ -33,7 +33,8 @@ export default {
       logoUrl: require('../../assets/image/logo.png'),
       user: {
         mobile: '13521016268',
-        code: '246810'
+        code: '246810',
+        checked: false
       },
       rules: {
         mobile: [
@@ -44,9 +45,22 @@ export default {
           { required: true, message: '请输入验证码', trigger: 'blur' },
           // { min: 6, max: 6, message: '验证码个数不符', trigger: 'blur' }
           { pattern: /^\d{6}$/, message: '验证码个数不符', trigger: 'blur' }
+        ],
+        checked: [
+          {
+            validator: (rule, value, callback) => {
+              if (value) {
+                // 同意协议
+                callback()
+              } else {
+                // 不同意协议时，下面会进行提示需要勾选协议才可以生效
+                callback(new Error('请勾选协议'))
+              }
+            },
+            trigger: 'blur'
+          }
         ]
       },
-      checked: true,
       isLoading: false
     }
   },
@@ -55,7 +69,7 @@ export default {
       this.isLoading = true
       this.$refs.rulesForm.validate(valid => {
         if (!valid) {
-          // 手动验证失败
+          // 手动验证失败，阻止后续代码执行
           this.isLoading = false
           return false
         }
