@@ -33,7 +33,7 @@ export default {
       logoUrl: require('../../assets/image/logo.png'),
       user: {
         mobile: '13521016268',
-        code: '246810'
+        code: '2468'
       },
       rules: {
         mobile: [
@@ -42,7 +42,8 @@ export default {
         ],
         code: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
-          { min: 6, max: 6, message: '验证码个数不符', trigger: 'blur' }
+          // { min: 6, max: 6, message: '验证码个数不符', trigger: 'blur' }
+          { pattern: /^\d{6}$/, message: '验证码个数不符', trigger: 'blur' }
         ]
       },
       checked: true,
@@ -53,7 +54,6 @@ export default {
     submitForm () {
       this.isLoading = true
       this.$refs.rulesForm.validate(valid => {
-        console.log('rulesForm', valid)
         if (valid) {
           // 手动验证成功
           this.handleLogin()
