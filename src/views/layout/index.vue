@@ -1,12 +1,12 @@
 <template>
   <el-container class="layout">
-    <el-aside width="200px" class="aside">
-      <layout-nav-menu />
+    <el-aside width="auto" class="aside">
+      <layout-nav-menu :isCollapse="isCollapse" />
     </el-aside>
     <el-container>
       <el-header class="header">
         <div class="header-title">
-          <i class="el-icon-s-fold"></i>
+          <i :class="showIcon" @click="handleCollapseChange"></i>
           <span>FBMS后台管理系统</span>
         </div>
         <div class="header-right">
@@ -45,11 +45,17 @@ export default {
   name: 'LayoutIndex',
   data () {
     return {
-      user: {}
+      user: {},
+      isCollapse: false // 是否折叠收起菜单
     }
   },
   components: {
     LayoutNavMenu
+  },
+  computed: {
+    showIcon () {
+      return this.isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'
+    }
   },
   created () {
     this.loadUserInfo()
@@ -62,6 +68,10 @@ export default {
           this.user = Object.assign({}, { name, photo })
         }
       })
+    },
+    // 切换
+    handleCollapseChange () {
+      this.isCollapse = !this.isCollapse
     }
   }
 }
@@ -77,8 +87,11 @@ export default {
     .aside {
       background-color: #d3dce6;
       height: 100%;
-      .el-menu {
+      /deep/ .el-menu {
         height: 100%;
+        .el-menu-item {
+          width: 200px;
+        }
       }
     }
     .header {

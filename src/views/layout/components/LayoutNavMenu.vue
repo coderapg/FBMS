@@ -2,6 +2,7 @@
   <el-menu
     router
     default-active="/"
+    :collapse="isCollapse"
     background-color="#002033"
     text-color="#fff"
     active-text-color="#ffd04b">
@@ -39,8 +40,13 @@
 <script>
 
 export default {
-  name: 'LayoutNavMenu'
+  name: 'LayoutNavMenu',
+  props: {
+    isCollapse: {
+      type: Boolean,
+      default: false,
+      required: true
+    }
+  }
 }
 </script>
-
-<style lang="less" scoped></style>
