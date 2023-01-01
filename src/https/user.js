@@ -16,9 +16,6 @@ export function login (config) {
 export function getUserInfo () {
   return request({
     method: 'GET',
-    url: '/app/v1_0/user/profile',
-    headers: {
-      Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzI1NzQzMzAsInVzZXJfaWQiOjE2MDk0NDM2Njc4NTUwMTU5MzYsInJlZnJlc2giOmZhbHNlLCJ2ZXJpZmllZCI6dHJ1ZX0.DUGi239PilXyCd0nrF_v8n2blXUwB9JAPRwcqpL4b1E'
-    }
+    url: '/app/v1_0/user/profile'
   })
 }

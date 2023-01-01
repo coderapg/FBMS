@@ -85,6 +85,11 @@ export default {
           type: 'success'
         })
         this.isLoading = false
+
+        // 登录时，把当前登录人的相关信息存储到本地存储中
+        const { data } = res.data
+        window.localStorage.setItem('FBMS_User_Info', JSON.stringify(data))
+
         // 登录成功后跳转到首页
         this.$router.push('/')
       }).catch(err => {
