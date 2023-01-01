@@ -21,7 +21,7 @@
                 <i class="el-icon-setting"></i>
                 设置
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item @click.native="handleLogOut">
                 <i class="el-icon-switch-button"></i>
                 退出
               </el-dropdown-item>
@@ -69,9 +69,32 @@ export default {
         }
       })
     },
-    // 切换
+    // 切换折叠菜单
     handleCollapseChange () {
       this.isCollapse = !this.isCollapse
+    },
+    // 退出登录
+    handleLogOut () {
+      this.$confirm('是否退出登录?', '退出登录', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          center: true,
+          message: '退出成功!'
+        })
+        // 退出登录
+        window.localStorage.removeItem('FBMS_User_Info')
+        this.$router.push('/login')
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          center: true,
+          message: '取消'
+        })
+      })
     }
   }
 }
