@@ -12,8 +12,8 @@
         <div class="header-right">
           <el-dropdown>
             <span class="el-dropdown-link avatar-wrap">
-              <img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202103%2F09%2F20210309094501_jfyix.thumb.1000_0.jpg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1675155531&t=8eda01a565dd12e9f0536efcb42f3e86" alt="">
-              <span>黑塔布拉考密</span>
+              <img :src="user.phote" alt="">
+              <span>{{ user.name }}</span>
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -37,12 +37,32 @@
 </template>
 
 <script>
+import { getUserInfo } from 'https/user'
+
 import LayoutNavMenu from './components/LayoutNavMenu'
 
 export default {
   name: 'LayoutIndex',
+  data () {
+    return {
+      user: {}
+    }
+  },
   components: {
     LayoutNavMenu
+  },
+  created () {
+    this.loadUserInfo()
+  },
+  methods: {
+    loadUserInfo () {
+      getUserInfo().then(res => {
+        const { data: { data: { name, photo } }, status } = res
+        if (status === 200) {
+          this.user = Object.assign({}, { name, photo })
+        }
+      })
+    }
   }
 }
 </script>
