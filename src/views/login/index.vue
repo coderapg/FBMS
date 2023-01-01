@@ -32,7 +32,8 @@ export default {
     return {
       logoUrl: require('../../assets/image/logo.png'),
       user: {
-        mobile: '13521016268',
+        // mobile: '13521016268',
+        mobile: '13911111111',
         code: '246810',
         checked: false
       },
