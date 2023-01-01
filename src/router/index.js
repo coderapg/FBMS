@@ -1,10 +1,17 @@
-// 配置项目路由表
+// 配置路由映射关系表
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-const Login = () => import('views/login/index')
-const Layout = () => import('views/layout/index')
+const Article = () => import('views/article/')
+const Comment = () => import('views/comment/')
+const Fans = () => import('views/fans/')
+const Home = () => import('views/home/')
+const Layout = () => import('views/layout/')
+const Login = () => import('views/login/')
+const Material = () => import('views/material/')
+const Publish = () => import('views/publish/')
+const Setting = () => import('views/setting/')
 
 Vue.use(VueRouter)
 
@@ -15,9 +22,45 @@ const routes = [
     component: Login
   },
   {
-    path: '/',
-    name: Layout,
-    component: Layout
+    path: '',
+    component: Layout,
+    children: [
+      {
+        path: '/article',
+        name: Article,
+        component: Article
+      },
+      {
+        path: '/comment',
+        name: Comment,
+        component: Comment
+      },
+      {
+        path: '/fans',
+        name: Fans,
+        component: Fans
+      },
+      {
+        path: '/',
+        name: Home,
+        component: Home
+      },
+      {
+        path: '/material',
+        name: Material,
+        component: Material
+      },
+      {
+        path: '/publish',
+        name: Publish,
+        component: Publish
+      },
+      {
+        path: '/setting',
+        name: Setting,
+        component: Setting
+      }
+    ]
   }
 ]
 

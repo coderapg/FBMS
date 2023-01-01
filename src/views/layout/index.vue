@@ -29,7 +29,9 @@
           </el-dropdown>
         </div>
       </el-header>
-      <el-main class="main">Main</el-main>
+      <el-main class="main">
+        <router-view />
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -67,6 +69,9 @@ export default {
       .header-title {
         font-size: 20px;
         color: #000;
+        .el-icon-s-fold {
+          font-size: 24px;
+        }
         span {
           margin-left: 10px;
         }
