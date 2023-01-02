@@ -50,6 +50,13 @@
         :data="articleData"
         style="width: 100%">
         <el-table-column prop="date" label="封面">
+          <template slot-scope="scope">
+            <el-image
+              class="item-image"
+              style="width: 100px;"
+              :src="scope.row.cover.images[0]"
+              fit="cover" />
+          </template>
         </el-table-column>
         <el-table-column prop="title" label="标题" />
         <el-table-column prop="status" label="状态">
@@ -127,6 +134,12 @@ export default {
       margin-bottom: 30px;
     }
     .article-table {
+      .el-table__row {
+        .item-image {
+          width: 100px;
+          height: 100PX;
+        }
+      }
       .pagination {
         text-align: center;
         margin: 30px auto;
