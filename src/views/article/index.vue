@@ -36,7 +36,7 @@
             end-placeholder="结束日期" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleQuery">查询</el-button>
+          <el-button type="primary" :disabled="isLoading" @click="handleQuery">查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -85,6 +85,7 @@
         class="pagination"
         background
         layout="prev, pager, next"
+        :disabled="isLoading"
         :page-size="pageSize"
         :total="totalCount"
         @current-change="handleCurrentChange" />
