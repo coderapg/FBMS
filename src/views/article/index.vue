@@ -110,9 +110,6 @@ export default {
       setDisabled: {
         disabledDate (time) {
           return time.getTime() > Date.now() // 可选历史天、可选当前天、不可选未来天
-          // return time.getTime() > Date.now() - 8.64e7 // 可选历史天、不可选当前天、不可选未来天
-          // return time.getTime() < Date.now() - 8.64e7 // 不可选历史天、可选当前天、可选未来天
-          // return time.getTime() < Date.now() // 不可选历史天、不可选当前天、可选未来天
         }
       },
       articleData: [],
