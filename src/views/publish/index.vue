@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { getChannels, addArticle } from 'https/article'
+import { getChannels, addArticle, getArticle } from 'https/article'
 
 export default {
   name: 'PublishIndex',
@@ -52,11 +52,18 @@ export default {
         },
         title: ''
       },
-      channels: []
+      channels: [],
+      articleId: '' // 编辑时存储当前文章的id
     }
   },
   created () {
     this.loadChannels()
+    const { articleId } = this.$route.query
+    if (articleId) {
+      this.articleId = articleId
+      // 获取编辑的数据
+      this.editData()
+    }
   },
   methods: {
     // 获取频道列表
@@ -68,6 +75,7 @@ export default {
         }
       })
     },
+    // 发布文章
     handleOnPublish (draft) {
       addArticle(this.form, draft).then(res => {
         const { status } = res
@@ -77,6 +85,15 @@ export default {
             type: 'success',
             center: true
           })
+        }
+      })
+    },
+    // 跟新文章
+    editData () {
+      getArticle(this.articleId).then(res => {
+        const { data: { data: { channel_id: channelId, content, cover, id, title } }, status } = res
+        if (status === 200) {
+          this.form = Object.assign({}, { channel_id: channelId, content, cover, id: id.toString(), title })
         }
       })
     }

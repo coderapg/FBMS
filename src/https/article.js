@@ -39,3 +39,11 @@ export function addArticle (article, draft) {
     data: article
   })
 }
+
+// 获取编辑的文章
+export function getArticle (articleId) {
+  return request({
+    method: 'GET',
+    url: `/mp/v1_0/articles/${articleId}`
+  })
+}
