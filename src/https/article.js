@@ -11,3 +11,11 @@ export function getArticles (params) {
     params
   })
 }
+
+// 获取全部频道列表
+export function getChannels () {
+  return request({
+    method: 'GET',
+    url: '/mp/v1_0/channels'
+  })
+}

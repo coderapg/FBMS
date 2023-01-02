@@ -19,8 +19,7 @@
         </el-form-item>
         <el-form-item label="频道">
           <el-select v-model="form.channel" placeholder="频道">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="日期">
@@ -92,7 +91,7 @@
 </template>
 
 <script>
-import { getArticles } from 'https/article'
+import { getArticles, getChannels } from 'https/article'
 import { articleStatus } from 'utils/constant'
 
 export default {
@@ -102,33 +101,47 @@ export default {
       articleStatus,
       form: {
         status: null,
-        channel: '',
+        channel: null,
         date: ''
       },
       articleData: [],
       page: 1, // 当前页码
       pageSize: 20, // 每页请求条数
       totalCount: 0, // 总条数
-      isLoading: false // 每次请求时loading状态
+      isLoading: false, // 每次请求时loading状态
+      channels: [] // 全部频道列表数据
     }
   },
   created () {
     this.loadArticles()
+    this.loadChannels()
   },
   methods: {
     // 获取当前用户文章列表
     loadArticles (page = 1) {
+      const { channel, status } = this.form
+      console.log('结构', channel, status)
       this.isLoading = true
       getArticles({
+        channel_id: channel,
         page,
         per_page: this.pageSize,
-        status: this.form.status
+        status
       }).then(res => {
         const { data: { data: { results, total_count: totalCount } }, status } = res
         if (status === 200) {
           this.articleData = results
           this.totalCount = totalCount
           this.isLoading = false
+        }
+      })
+    },
+    // 获取全部频道列表
+    loadChannels () {
+      getChannels().then(res => {
+        const { data: { data: { channels } }, status } = res
+        if (status === 200) {
+          this.channels = channels
         }
       })
     },
