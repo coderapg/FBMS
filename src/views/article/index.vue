@@ -12,13 +12,13 @@
       <!-- /面包屑导航 -->
       <el-form :inline="true" :model="form" size="small" class="demo-form-inline">
         <el-form-item label="状态">
-          <el-select v-model="form.status" placeholder="状态">
+          <el-select clearable v-model="form.status" placeholder="状态">
             <el-option label="全部" :value="null" />
             <el-option v-for="item in articleStatus" :key="item.status" :label="item.text" :value="item.status" />
           </el-select>
         </el-form-item>
         <el-form-item label="频道">
-          <el-select v-model="form.channel" placeholder="频道">
+          <el-select clearable v-model="form.channel" placeholder="频道">
             <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -29,8 +29,8 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            format="yyyy-MM-dd HH:mm:ss"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
             :picker-options="setDisabled" />
         </el-form-item>
         <el-form-item>
@@ -48,7 +48,7 @@
         size="small"
         v-loading="isLoading"
         :data="articleData">
-        <el-table-column prop="date" label="封面">
+        <el-table-column label="封面">
           <template slot-scope="scope">
             <el-image
               class="item-image"
@@ -58,7 +58,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="title" label="标题" />
-        <el-table-column prop="status" label="状态">
+        <el-table-column label="状态">
           <!-- <template slot-scope="scope">
             <el-tag type="info" v-if="scope.row.status === 0">草稿</el-tag>
             <el-tag v-else-if="scope.row.status === 1">待审核</el-tag>
@@ -105,7 +105,7 @@ export default {
       form: {
         status: null,
         channel: null,
-        date: ''
+        date: null
       },
       setDisabled: {
         disabledDate (time) {
@@ -127,9 +127,11 @@ export default {
   methods: {
     // 获取当前用户文章列表
     loadArticles (page = 1) {
-      const { channel, status } = this.form
+      const { channel, date, status } = this.form
       this.isLoading = true
       getArticles({
+        begin_pubdate: date ? date[0] : null, // 开始日期筛选
+        end_pubdate: date ? date[1] : null, // 结束日期筛选
         channel_id: channel,
         page,
         per_page: this.pageSize,
