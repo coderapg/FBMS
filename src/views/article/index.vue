@@ -13,12 +13,8 @@
       <el-form :inline="true" :model="form" size="small" class="demo-form-inline">
         <el-form-item label="状态">
           <el-select v-model="form.status" placeholder="状态">
-            <el-option label="区域一" value="null">全部</el-option>
-            <el-option label="区域一" value="0">草稿</el-option>
-            <el-option label="区域一" value="1">待审核</el-option>
-            <el-option label="区域一" value="2">审核通过</el-option>
-            <el-option label="区域一" value="3">审核失败</el-option>
-            <el-option label="区域一" value="4">已删除</el-option>
+            <el-option label="全部" :value="null" />
+            <el-option v-for="item in articleStatus" :key="item.status" :label="item.text" :value="item.status" />
           </el-select>
         </el-form-item>
         <el-form-item label="频道">
@@ -125,7 +121,8 @@ export default {
       this.isLoading = true
       getArticles({
         page,
-        per_page: this.pageSize
+        per_page: this.pageSize,
+        status: this.form.status
       }).then(res => {
         const { data: { data: { results, total_count: totalCount } }, status } = res
         if (status === 200) {
@@ -140,8 +137,9 @@ export default {
       this.page = page
       this.loadArticles(page)
     },
+    // 查询
     handleQuery () {
-      console.log('handleQuery!')
+      this.loadArticles(1)
     }
   }
 }
