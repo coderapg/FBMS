@@ -29,7 +29,7 @@ export function delectArticle (articleId) {
 }
 
 // 发布文章
-export function publishArticle (article, draft) {
+export function addArticle (article, draft) {
   return request({
     method: 'POST',
     url: '/mp/v1_0/articles',

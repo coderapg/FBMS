@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { getChannels, publishArticle } from 'https/article'
+import { getChannels, addArticle } from 'https/article'
 
 export default {
   name: 'PublishIndex',
@@ -69,7 +69,7 @@ export default {
       })
     },
     handleOnPublish (draft) {
-      publishArticle(this.form, draft).then(res => {
+      addArticle(this.form, draft).then(res => {
         const { status } = res
         if (status === 201) {
           this.$message({
