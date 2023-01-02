@@ -19,3 +19,11 @@ export function getChannels () {
     url: '/mp/v1_0/channels'
   })
 }
+
+// 删除表单数据
+export function delectArticle (articleId) {
+  return request({
+    method: 'DELETE',
+    url: `/mp/v1_0/articles/${articleId}`
+  })
+}

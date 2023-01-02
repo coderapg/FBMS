@@ -71,10 +71,10 @@
           </template>
         </el-table-column>
         <el-table-column prop="pubdate" label="发布时间" />
-        <el-table-column label="操作">
-          <template>
+        <el-table-column label="操作" width="150px">
+          <template slot-scope="scope">
             <el-button size="mini" type="primary" icon="el-icon-edit" circle></el-button>
-            <el-button size="mini" type="danger" icon="el-icon-delete" circle></el-button>
+            <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="handleItemClick(scope.row.id)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -162,6 +162,10 @@ export default {
     // 查询
     handleQuery () {
       this.loadArticles(1)
+    },
+    // 删除文章
+    handleItemClick (id) {
+      console.log('删除', id.toString())
     }
   }
 }
