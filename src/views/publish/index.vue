@@ -4,7 +4,7 @@
     <div slot="header" class="clearfix">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item to="/">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>发布文章</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ articleId ? '编辑' : '发布' }}文章</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- /面包屑导航 -->
@@ -29,20 +29,18 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleOnPublish(false)">发布</el-button>
-        <el-button @click="handleOnPublish(true)">存入草稿</el-button>
+        <el-button type="primary" @click="handleOnPublish(false)">{{ articleId ? '编辑' : '发布' }}</el-button>
+        <el-button @click="handleOnPublish(true)" v-if="!articleId">存入草稿</el-button>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 
 <script>
-import { getChannels, addArticle, getArticle } from 'https/article'
-import { pathMixins } from 'utils/mixin'
+import { getChannels, addArticle, getArticle, updateArticle } from 'https/article'
 
 export default {
   name: 'PublishIndex',
-  mixins: [pathMixins],
   data () {
     return {
       form: {
@@ -79,20 +77,25 @@ export default {
     },
     // 发布文章
     handleOnPublish (draft) {
-      addArticle(this.form, draft).then(res => {
-        const { status } = res
-        if (status === 201) {
-          this.$message({
-            message: '发布成功',
-            type: 'success',
-            center: true
-          })
-          // 添加完成后跳转到文章页面
-          this.pathTo('/article')
-        }
-      })
+      if (this.articleId) {
+        // 编辑/更新文章
+        updateArticle(this.articleId, this.form, draft).then(res => {
+          const { status } = res
+          if (status === 201) {
+            this.baseMethod()
+          }
+        })
+      } else {
+        // 新增文章
+        addArticle(this.form, draft).then(res => {
+          const { status } = res
+          if (status === 201) {
+            this.baseMethod()
+          }
+        })
+      }
     },
-    // 更新文章
+    // 编辑文章-对文章进行赋值
     editData () {
       getArticle(this.articleId).then(res => {
         const { data: { data: { channel_id: channelId, content, cover, id, title } }, status } = res
@@ -100,6 +103,16 @@ export default {
           this.form = Object.assign({}, { channel_id: channelId, content, cover, id: id.toString(), title })
         }
       })
+    },
+    // 抽取公共提示和跳转代码
+    baseMethod () {
+      this.$message({
+        message: this.articleId ? '编辑成功' : '发布成功',
+        type: 'success',
+        center: true
+      })
+      // 添加完成后跳转到文章页面
+      this.$router.push('/article')
     }
   }
 }

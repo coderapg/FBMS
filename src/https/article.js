@@ -47,3 +47,15 @@ export function getArticle (articleId) {
     url: `/mp/v1_0/articles/${articleId}`
   })
 }
+
+// 更新文章
+export function updateArticle (articleId, articleObj, draft = false) {
+  return request({
+    method: 'PUT',
+    url: `/mp/v1_0/articles/${articleId}`,
+    params: {
+      draft
+    },
+    data: articleObj
+  })
+}
