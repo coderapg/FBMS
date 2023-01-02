@@ -14,8 +14,7 @@
       </el-form-item>
       <el-form-item label="频道">
         <el-select v-model="form.channel_id" placeholder="请选择频道">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+          <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="内容">
@@ -38,6 +37,7 @@
 </template>
 
 <script>
+import { getChannels } from 'https/article'
 
 export default {
   name: 'PublishIndex',
@@ -51,10 +51,23 @@ export default {
           type: 1
         },
         title: ''
-      }
+      },
+      channels: []
     }
   },
+  created () {
+    this.loadChannels()
+  },
   methods: {
+    // 获取频道列表
+    loadChannels () {
+      getChannels().then(res => {
+        const { data: { data: { channels } }, status } = res
+        if (status === 200) {
+          this.channels = channels
+        }
+      })
+    },
     handleOnPublish () {
       console.log('submit!')
     }
