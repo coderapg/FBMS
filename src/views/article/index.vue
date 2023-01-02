@@ -45,10 +45,11 @@
     <el-card class="article-table">
       <div slot="header" class="clearfix">根据筛选条件共查询到{{ totalCount }}条结果:</div>
       <el-table
+        style="width: 100%"
         border
         size="small"
-        :data="articleData"
-        style="width: 100%">
+        v-loading="isLoading"
+        :data="articleData">
         <el-table-column prop="date" label="封面">
           <template slot-scope="scope">
             <el-image
@@ -110,7 +111,8 @@ export default {
       articleData: [],
       page: 1, // 当前页码
       pageSize: 20, // 每页请求条数
-      totalCount: 0 // 总条数
+      totalCount: 0, // 总条数
+      isLoading: false // 每次请求时loading状态
     }
   },
   created () {
@@ -119,6 +121,7 @@ export default {
   methods: {
     // 获取当前用户文章列表
     loadArticles (page = 1) {
+      this.isLoading = true
       getArticles({
         page,
         per_page: this.pageSize
@@ -127,6 +130,7 @@ export default {
         if (status === 200) {
           this.articleData = results
           this.totalCount = totalCount
+          this.isLoading = false
         }
       })
     },
