@@ -43,7 +43,7 @@
     <!-- /筛选区域 -->
     <!-- table表格 -->
     <el-card class="article-table">
-      <div slot="header" class="clearfix">根据筛选条件共查询到40000条结果:</div>
+      <div slot="header" class="clearfix">根据筛选条件共查询到{{ totalCount }}条结果:</div>
       <el-table
         border
         size="small"
@@ -84,7 +84,9 @@
         class="pagination"
         background
         layout="prev, pager, next"
-        :total="1000" />
+        :page-size="pageSize"
+        :total="totalCount"
+        @current-change="handleCurrentChange" />
       <!-- /分页 -->
     </el-card>
     <!-- /table表格 -->
@@ -105,7 +107,10 @@ export default {
         channel: '',
         date: ''
       },
-      articleData: []
+      articleData: [],
+      page: 1, // 当前页码
+      pageSize: 20, // 每页请求条数
+      totalCount: 0 // 总条数
     }
   },
   created () {
@@ -113,13 +118,22 @@ export default {
   },
   methods: {
     // 获取当前用户文章列表
-    loadArticles () {
-      getArticles({ page: 1, per_page: 20 }).then(res => {
-        const { data: { data: { results } }, status } = res
+    loadArticles (page = 1) {
+      getArticles({
+        page,
+        per_page: this.pageSize
+      }).then(res => {
+        const { data: { data: { results, total_count: totalCount } }, status } = res
         if (status === 200) {
           this.articleData = results
+          this.totalCount = totalCount
         }
       })
+    },
+    // 分页
+    handleCurrentChange (page) {
+      this.page = page
+      this.loadArticles(page)
     },
     handleQuery () {
       console.log('handleQuery!')
