@@ -22,7 +22,7 @@
             <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="日期">
+        <el-form-item label="日期" class="picker-time">
           <el-date-picker
             v-model="form.date"
             type="datetimerange"
