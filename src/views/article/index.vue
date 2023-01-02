@@ -94,6 +94,7 @@
 </template>
 
 <script>
+//  delectArticle
 import { getArticles, getChannels } from 'https/article'
 import { articleStatus } from 'utils/constant'
 
@@ -165,7 +166,21 @@ export default {
     },
     // 删除文章
     handleItemClick (id) {
-      console.log('删除', id.toString())
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '删除提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
