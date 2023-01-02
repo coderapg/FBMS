@@ -29,15 +29,15 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleOnPublish">发布</el-button>
-        <el-button>存入草稿</el-button>
+        <el-button type="primary" @click="handleOnPublish(false)">发布</el-button>
+        <el-button @click="handleOnPublish(true)">存入草稿</el-button>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 
 <script>
-import { getChannels } from 'https/article'
+import { getChannels, publishArticle } from 'https/article'
 
 export default {
   name: 'PublishIndex',
@@ -68,8 +68,17 @@ export default {
         }
       })
     },
-    handleOnPublish () {
-      console.log('submit!')
+    handleOnPublish (draft) {
+      publishArticle(this.form, draft).then(res => {
+        const { status } = res
+        if (status === 201) {
+          this.$message({
+            message: '发布成功',
+            type: 'success',
+            center: true
+          })
+        }
+      })
     }
   }
 }

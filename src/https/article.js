@@ -27,3 +27,15 @@ export function delectArticle (articleId) {
     url: `/mp/v1_0/articles/${articleId}`
   })
 }
+
+// 发布文章
+export function publishArticle (article, draft) {
+  return request({
+    method: 'POST',
+    url: '/mp/v1_0/articles',
+    params: {
+      draft
+    },
+    data: article
+  })
+}
