@@ -28,7 +28,7 @@ export function delectArticle (articleId) {
   })
 }
 
-// 发布文章
+// 新增文章
 export function addArticle (article, draft) {
   return request({
     method: 'POST',
