@@ -38,9 +38,11 @@
 
 <script>
 import { getChannels, addArticle, getArticle } from 'https/article'
+import { pathMixins } from 'utils/mixin'
 
 export default {
   name: 'PublishIndex',
+  mixins: [pathMixins],
   data () {
     return {
       form: {
@@ -85,10 +87,12 @@ export default {
             type: 'success',
             center: true
           })
+          // 添加完成后跳转到文章页面
+          this.pathTo('/article')
         }
       })
     },
-    // 跟新文章
+    // 更新文章
     editData () {
       getArticle(this.articleId).then(res => {
         const { data: { data: { channel_id: channelId, content, cover, id, title } }, status } = res
