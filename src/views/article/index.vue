@@ -28,7 +28,10 @@
             type="datetimerange"
             range-separator="至"
             start-placeholder="开始日期"
-            end-placeholder="结束日期" />
+            end-placeholder="结束日期"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            :picker-options="setDisabled" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="isLoading" @click="handleQuery">查询</el-button>
@@ -103,6 +106,14 @@ export default {
         status: null,
         channel: null,
         date: ''
+      },
+      setDisabled: {
+        disabledDate (time) {
+          return time.getTime() > Date.now() // 可选历史天、可选当前天、不可选未来天
+          // return time.getTime() > Date.now() - 8.64e7 // 可选历史天、不可选当前天、不可选未来天
+          // return time.getTime() < Date.now() - 8.64e7 // 不可选历史天、可选当前天、可选未来天
+          // return time.getTime() < Date.now() // 不可选历史天、不可选当前天、可选未来天
+        }
       },
       articleData: [],
       page: 1, // 当前页码
