@@ -86,6 +86,7 @@
         :disabled="isLoading"
         :page-size="pageSize"
         :total="totalCount"
+        :current-page.sync="page"
         @current-change="handleCurrentChange" />
       <!-- /分页 -->
     </el-card>
@@ -94,8 +95,7 @@
 </template>
 
 <script>
-//  delectArticle
-import { getArticles, getChannels } from 'https/article'
+import { getArticles, getChannels, delectArticle } from 'https/article'
 import { articleStatus } from 'utils/constant'
 
 export default {
@@ -157,7 +157,6 @@ export default {
     },
     // 分页
     handleCurrentChange (page) {
-      this.page = page
       this.loadArticles(page)
     },
     // 查询
@@ -171,9 +170,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        delectArticle(id.toString()).then(res => {
+          const { status } = res
+          if (status === 204) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            // 删除成功，更新当前页的文章数据列表
+            this.loadArticles(this.page)
+          }
         })
       }).catch(() => {
         this.$message({
