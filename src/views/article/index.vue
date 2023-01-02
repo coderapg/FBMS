@@ -120,7 +120,6 @@ export default {
     // 获取当前用户文章列表
     loadArticles (page = 1) {
       const { channel, status } = this.form
-      console.log('结构', channel, status)
       this.isLoading = true
       getArticles({
         channel_id: channel,
