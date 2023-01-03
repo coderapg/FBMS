@@ -7,3 +7,9 @@ body {
 .el-picker-panel .el-date-range-picker__time-header {
   display: none;
 }
+
+/* 统一处理-分页居中 */
+.pagination {
+  text-align: center;
+  margin: 30px auto;
+}

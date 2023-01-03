@@ -208,10 +208,6 @@ export default {
           height: 100PX;
         }
       }
-      .pagination {
-        text-align: center;
-        margin: 30px auto;
-      }
     }
   }
 </style>

@@ -1,13 +1,14 @@
 <template>
   <div class="material-container">
     <el-card class="box-card">
-    <!-- 面包屑导航 -->
+      <!-- 面包屑导航 -->
       <div slot="header" class="clearfix">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item to="/">首页</el-breadcrumb-item>
           <el-breadcrumb-item>素材管理</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
+      <!-- /面包屑导航 -->
       <div class="material-collect">
         <el-radio-group v-model="collect" size="medium" @input="handleRadioChange">
           <el-radio-button :label="false">全部</el-radio-button>
@@ -26,15 +27,16 @@
           </div>
         </el-col>
       </el-row>
-      <div class="pagination">
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          :page-size="pageSize"
-          :total="totalCount"
-          :current-page.sync="page"
-          @current-change="handleCurrentChange" />
-      </div>
+      <!-- 分页 -->
+      <el-pagination
+        class="pagination"
+        background
+        layout="prev, pager, next"
+        :page-size="pageSize"
+        :total="totalCount"
+        :current-page.sync="page"
+        @current-change="handleCurrentChange" />
+      <!-- /分页 -->
     </el-card>
     <!-- 对话提示框 -->
     <el-dialog
@@ -208,11 +210,6 @@ export default {
         color: #ff6700;
       }
     }
-  }
-  .pagination {
-    margin-top: 20px;
-    width: 100%;
-    text-align: center;
   }
   .dialog-wrap {
     /deep/ .el-dialog__body {
