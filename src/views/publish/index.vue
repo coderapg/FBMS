@@ -9,34 +9,85 @@
     </div>
     <!-- /面包屑导航 -->
     <el-form ref="form" :model="form" label-width="60px">
-      <el-form-item label="标题">
-        <el-input v-model="form.title"></el-input>
-      </el-form-item>
-      <el-form-item label="频道">
-        <el-select v-model="form.channel_id" placeholder="请选择频道">
-          <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="内容">
-        <el-input type="textarea" v-model="form.content"></el-input>
-      </el-form-item>
-      <el-form-item label="封面">
-        <el-radio-group v-model="form.cover.type">
-          <el-radio :label="1">单图</el-radio>
-          <el-radio :label="3">三图</el-radio>
-          <el-radio :label="0">无图</el-radio>
-          <el-radio :label="-1">自动</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleOnPublish(false)">{{ articleId ? '编辑' : '发布' }}</el-button>
-        <el-button @click="handleOnPublish(true)" v-if="!articleId">存入草稿</el-button>
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="标题">
+            <el-input v-model="form.title"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="频道">
+            <el-select v-model="form.channel_id" placeholder="请选择频道">
+              <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="内容">
+            <el-tiptap :width="1400" :height="400" lang="zh" v-model="form.content" :extensions="extensions" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="封面">
+            <el-radio-group v-model="form.cover.type">
+              <el-radio :label="1">单图</el-radio>
+              <el-radio :label="3">三图</el-radio>
+              <el-radio :label="0">无图</el-radio>
+              <el-radio :label="-1">自动</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item>
+            <el-button type="primary" @click="handleOnPublish(false)">{{ articleId ? '编辑' : '发布' }}</el-button>
+            <el-button @click="handleOnPublish(true)" v-if="!articleId">存入草稿</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
   </el-card>
 </template>
 
 <script>
+import {
+  ElementTiptap,
+  Doc,
+  Text,
+  Paragraph,
+  Heading,
+  Bold,
+  Italic,
+  Strike,
+  Underline,
+  Image,
+  CodeBlock,
+  Blockquote,
+  ListItem,
+  BulletList,
+  OrderedList,
+  TodoItem,
+  TodoList,
+  TextAlign,
+  Indent,
+  LineHeight,
+  Table,
+  TableHeader,
+  TableCell,
+  TableRow,
+  TextColor,
+  Preview,
+  Fullscreen,
+  FontSize
+} from 'element-tiptap'
+// import element-tiptap 样式
+import 'element-tiptap/lib/index.css'
+
 import { getChannels, addArticle, getArticle, updateArticle } from 'https/article'
 
 export default {
@@ -53,8 +104,41 @@ export default {
         title: ''
       },
       channels: [],
-      articleId: '' // 编辑时存储当前文章的id
+      articleId: '', // 编辑时存储当前文章的id
+      // 编辑器的 extensions(它们将会按照你声明的顺序被添加到菜单栏和气泡菜单中)
+      extensions: [
+        new Doc(),
+        new Text(),
+        new Paragraph(),
+        new Heading({ level: 5 }), // 标题
+        new Bold({ bubble: true }), // 粗体
+        new Italic(), // 斜体
+        new Strike(), // 删除线
+        new Underline({ bubble: true, menubar: false }), // 在气泡菜单而不在菜单栏中渲染菜单按钮
+        new Image(), // 插入图片
+        new CodeBlock(), // 代码块
+        new Blockquote(), // 引用
+        new ListItem(),
+        new BulletList(), // 无序列表
+        new OrderedList(), // 有序列表
+        new TodoItem(),
+        new TodoList(), // 类似TodoList
+        new TextAlign(),
+        new Indent(),
+        new LineHeight(),
+        new Table(),
+        new TableHeader(),
+        new TableCell(),
+        new TableRow(),
+        new TextColor(), // 字体颜色
+        new FontSize(), // 字号
+        new Preview(), // 预览
+        new Fullscreen() // 全屏
+      ]
     }
+  },
+  components: {
+    'el-tiptap': ElementTiptap
   },
   created () {
     this.loadChannels()
@@ -119,9 +203,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .el-form {
-    /deep/ .el-form-item__content {
-      width: 400px;
-    }
-  }
+  // .el-form {
+  //   /deep/ .el-form-item__content {
+  //     width: 400px;
+  //   }
+  // }
 </style>
