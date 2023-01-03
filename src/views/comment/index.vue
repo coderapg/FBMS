@@ -55,6 +55,7 @@
 
 <script>
 import { getArticles } from 'https/article'
+import { switchComment } from 'https/comment'
 
 export default {
   name: 'CommentIndex',
@@ -106,13 +107,22 @@ export default {
         type: 'warning'
       }).then(() => {
         flag ? row.comment_status = true : row.comment_status = false // 这一步很重要，row.showState会根据flag的值开启或关闭开关
-        this.$message({ type: 'success', message: '修改成功!' })
+        this.toggleSwitch(row)
       }).catch(() => {
-        this.$message({ type: 'info', showClose: true, message: '已取消修改！' })
+        this.$message({ type: 'info', showClose: true, message: '已取消修改！', center: true })
+      })
+    },
+    // switch切换成功时-发送请求
+    toggleSwitch (row) {
+      const { comment_status: commentStatus, id } = row
+      switchComment(id.toString(), commentStatus).then(res => {
+        const { status } = res
+        if (status === 201) {
+          const title = commentStatus ? '打开评论成功' : '关闭评论成功'
+          this.$message({ type: 'success', message: title, center: true })
+        }
       })
     }
   }
 }
 </script>
-
-<style lang="less" scoped></style>
