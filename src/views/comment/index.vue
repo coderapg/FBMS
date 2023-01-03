@@ -38,13 +38,14 @@
     <!-- 分页 -->
     <el-pagination
       class="pagination"
+      background
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="currentPage4"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
+      :current-page.sync="page"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="400" />
+      :total="totalCount" />
     <!-- /分页 -->
   </el-card>
 </template>
@@ -56,8 +57,10 @@ export default {
   name: 'CommentIndex',
   data () {
     return {
-      currentPage4: 4,
-      articles: [] // 评论数据
+      articles: [], // 评论数据
+      totalCount: 0, // 总条数
+      pageSize: 10, // 默认每页加载条数
+      page: 1
     }
   },
   created () {
@@ -66,21 +69,26 @@ export default {
   methods: {
     // 加载数据列表
     loadArticles (page = 1) {
+      this.page = page
       getArticles({
+        page,
+        per_page: this.pageSize,
         response_type: 'comment'
       }).then(res => {
         console.log('加载', res)
-        const { data: { data: { results } }, status } = res
+        const { data: { data: { results, total_count: totalCount } }, status } = res
         if (status === 200) {
+          this.totalCount = totalCount
           this.articles = results
         }
       })
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.pageSize = val
+      this.loadArticles(this.page)
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.loadArticles(val)
     }
   }
 }
