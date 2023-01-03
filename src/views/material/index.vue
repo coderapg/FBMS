@@ -22,7 +22,7 @@
             fit="cover" />
           <div class="item-wrap" v-show="!collect">
             <el-button :class="{ 'icon-cur': item.is_collected }" icon="el-icon-star-off" circle size="mini" :loading="item.isLoading" @click="handleItemCollect(item)" />
-            <el-button type="danger" icon="el-icon-delete" circle size="mini" :loading="item.isLoading"></el-button>
+            <el-button type="danger" icon="el-icon-delete" circle size="mini" :loading="item.isLoading" @click="handleItemDelete(item)"></el-button>
           </div>
         </el-col>
       </el-row>
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { getMaterialList, toggleItemCollect } from 'https/material'
+import { getMaterialList, toggleItemCollect, deleteItemImage } from 'https/material'
 import { uploadRichImage } from 'https/images'
 
 export default {
@@ -149,6 +149,23 @@ export default {
             type: 'error',
             center: true
           })
+        }
+      })
+    },
+    // 删除
+    handleItemDelete (item) {
+      item.isLoading = true
+      const { id } = item
+      deleteItemImage(id).then(res => {
+        const { status } = res
+        if (status === 204) {
+          item.isLoading = false
+          this.$message({
+            message: '删除成功',
+            type: 'success',
+            center: true
+          })
+          this.loadMaterialData(this.page)
         }
       })
     }

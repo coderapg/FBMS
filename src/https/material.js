@@ -22,3 +22,11 @@ export function toggleItemCollect (itemId, collect) {
     }
   })
 }
+
+// 删除
+export function deleteItemImage (itemId) {
+  return request({
+    method: 'DELETE',
+    url: `/mp/v1_0/user/images/${itemId}`
+  })
+}
