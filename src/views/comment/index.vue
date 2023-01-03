@@ -10,21 +10,28 @@
     <!-- /面包屑导航 -->
     <!-- 表格 -->
     <el-table
-      :data="tableData"
+      :data="articles"
+      border
+      :header-cell-style="{'text-align':'center'}"
+      :cell-style="{'text-align':'center'}"
       style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="日期"
-        width="180">
+      <el-table-column prop="title" label="标题" />
+      <el-table-column prop="total_comment_count" label="总评论数" />
+      <el-table-column prop="fans_comment_count" label="粉丝评论数" />
+      <el-table-column label="状态">
+        <template slot-scope="scope">{{ scope.row.comment_status ? '开启' : '关闭' }}</template>
       </el-table-column>
       <el-table-column
-        prop="name"
-        label="姓名"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="地址">
+        label="操作"
+        width="200">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.comment_status"
+            active-text="开启"
+            inactive-text="关闭"
+            active-color="#13ce66"
+            inactive-color="#ff4949" />
+        </template>
       </el-table-column>
     </el-table>
     <!-- /表格 -->
@@ -43,32 +50,32 @@
 </template>
 
 <script>
+import { getArticles } from 'https/article'
 
 export default {
   name: 'CommentIndex',
   data () {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
-      currentPage4: 4
+      currentPage4: 4,
+      articles: [] // 评论数据
     }
   },
+  created () {
+    this.loadArticles(1)
+  },
   methods: {
+    // 加载数据列表
+    loadArticles (page = 1) {
+      getArticles({
+        response_type: 'comment'
+      }).then(res => {
+        console.log('加载', res)
+        const { data: { data: { results } }, status } = res
+        if (status === 200) {
+          this.articles = results
+        }
+      })
+    },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
     },

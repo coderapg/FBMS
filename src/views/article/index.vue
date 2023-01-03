@@ -46,6 +46,8 @@
         style="width: 100%"
         border
         size="small"
+        :header-cell-style="{'text-align':'center'}"
+        :cell-style="{'text-align':'center'}"
         v-loading="isLoading"
         :data="articleData">
         <el-table-column label="封面">
