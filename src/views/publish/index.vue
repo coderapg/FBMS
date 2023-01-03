@@ -199,23 +199,30 @@ export default {
     },
     // 发布文章
     handleOnPublish (draft) {
-      if (this.articleId) {
-        // 编辑/更新文章
-        updateArticle(this.articleId, this.form, draft).then(res => {
-          const { status } = res
-          if (status === 201) {
-            this.baseMethod()
-          }
-        })
-      } else {
-        // 新增文章
-        addArticle(this.form, draft).then(res => {
-          const { status } = res
-          if (status === 201) {
-            this.baseMethod()
-          }
-        })
-      }
+      this.$refs.form.validate(valid => {
+        if (!valid) {
+          // 表单验证未通过
+          return
+        }
+        // 表单验证通过
+        if (this.articleId) {
+          // 编辑/更新文章
+          updateArticle(this.articleId, this.form, draft).then(res => {
+            const { status } = res
+            if (status === 201) {
+              this.baseMethod()
+            }
+          })
+        } else {
+          // 新增文章
+          addArticle(this.form, draft).then(res => {
+            const { status } = res
+            if (status === 201) {
+              this.baseMethod()
+            }
+          })
+        }
+      })
     },
     // 编辑文章-对文章进行赋值
     editData () {
