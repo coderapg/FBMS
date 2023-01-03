@@ -88,7 +88,8 @@ import {
 // import element-tiptap 样式
 import 'element-tiptap/lib/index.css'
 
-import { getChannels, addArticle, getArticle, updateArticle, uploadRichImage } from 'https/article'
+import { getChannels, addArticle, getArticle, updateArticle } from 'https/article'
+import { uploadRichImage } from 'https/images'
 
 export default {
   name: 'PublishIndex',
