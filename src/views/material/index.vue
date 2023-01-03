@@ -9,7 +9,7 @@
         </el-breadcrumb>
       </div>
       <div class="material-collect">
-        <el-radio-group v-model="radio" size="medium" @input="handleRadioChange">
+        <el-radio-group v-model="collect" size="medium" @input="handleRadioChange">
           <el-radio-button :label="false">全部</el-radio-button>
           <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
@@ -27,7 +27,10 @@
         <el-pagination
           background
           layout="prev, pager, next"
-          :total="1000" />
+          :page-size="pageSize"
+          :total="totalCount"
+          :current-page.sync="page"
+          @current-change="handleCurrentChange" />
       </div>
     </el-card>
     <!-- 对话提示框 -->
@@ -59,33 +62,39 @@ export default {
   name: 'MaterialIndex',
   data () {
     return {
-      radio: false,
+      collect: false,
       materialList: [],
       dialogVisible: false,
-      fileList: [] // 图片上传的数组
+      fileList: [], // 图片上传的数组
+      totalCount: 0, // 总条数
+      pageSize: 10, // 每页请求条数
+      page: 1 // 当前高亮的代码页
     }
   },
   created () {
     // 默认加载全部
-    this.loadMaterialData(false)
+    this.loadMaterialData()
   },
   methods: {
     // 加载数据列表
-    loadMaterialData (collect = false) {
+    loadMaterialData (page = 1) {
+      // 重置高亮页码，防止数据和页码不对应
+      this.page = page
       getMaterialList({
-        collect,
-        page: 1,
-        per_page: 10
+        collect: this.collect,
+        page,
+        per_page: this.pageSize
       }).then(res => {
-        const { data: { data: { results } }, status } = res
+        const { data: { data: { results, total_count: totalCount } }, status } = res
         if (status === 200) {
+          this.totalCount = totalCount
           this.materialList = results
         }
       })
     },
     // 切换全部 / 收藏
-    handleRadioChange (val) {
-      this.loadMaterialData(val)
+    handleRadioChange () {
+      this.loadMaterialData(1)
     },
     // 显示对话框
     handleDialog () {
@@ -106,10 +115,14 @@ export default {
             type: 'success'
           })
           // 图片上传成功后，重新刷新列表数据
-          this.loadMaterialData(false)
+          this.loadMaterialData(1)
           return url
         }
       })
+    },
+    // 分页
+    handleCurrentChange (page) {
+      this.loadMaterialData(page)
     }
   }
 }

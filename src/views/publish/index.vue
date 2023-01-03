@@ -145,7 +145,6 @@ export default {
             /**
              * 一般文件上传的接口都要求把请求头中的 Content-Type 设置为 multipart/form-data，但是我们使用 axios 上传文件的话不需要手动设置，你只要给 data 一个 new FormData() 对象即可。
              */
-            console.log('打印这是个撒', file)
             const fd = new FormData()
             fd.append('image', file)
             return uploadRichImage(fd).then(res => {
