@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <div class="material-collect">
-      <el-radio-group v-model="radio" size="medium">
+      <el-radio-group v-model="radio" size="medium" @input="handleRadioChange">
         <el-radio-button :label="false">全部</el-radio-button>
         <el-radio-button :label="true">收藏</el-radio-button>
       </el-radio-group>
@@ -43,12 +43,13 @@ export default {
     }
   },
   created () {
-    this.loadMaterialData()
+    this.loadMaterialData(false)
   },
   methods: {
-    loadMaterialData () {
+    // 加载数据列表
+    loadMaterialData (collect = false) {
       getMaterialList({
-        collect: false,
+        collect,
         page: 1,
         per_page: 10
       }).then(res => {
@@ -57,6 +58,10 @@ export default {
           this.materialList = results
         }
       })
+    },
+    // 切换全部 / 收藏
+    handleRadioChange (val) {
+      this.loadMaterialData(val)
     }
   }
 }
