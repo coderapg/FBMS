@@ -16,11 +16,14 @@
         <el-button size="medium" type="primary" icon="el-icon-upload" @click="handleDialog">上传</el-button>
       </div>
       <el-row :gutter="10">
-        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4" v-for="item in materialList" :key="item.id">
+        <el-col class="item-image" :xs="12" :sm="8" :md="8" :lg="6" :xl="4" v-for="item in materialList" :key="item.id">
           <el-image
-            style="width: 200px; height: 200px; margin-bottom: 20px;"
             :src="item.url"
             fit="cover" />
+          <div class="item-wrap" v-show="!collect">
+            <el-button icon="el-icon-star-off" circle size="mini"></el-button>
+            <el-button type="danger" icon="el-icon-delete" circle size="mini"></el-button>
+          </div>
         </el-col>
       </el-row>
       <div class="pagination">
@@ -115,7 +118,7 @@ export default {
             type: 'success'
           })
           // 图片上传成功后，重新刷新列表数据
-          this.loadMaterialData(1)
+          this.loadMaterialData(this.page)
           return url
         }
       })
@@ -133,6 +136,33 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+  }
+  .item-image {
+    position: relative;
+    .el-image {
+      width: 200px;
+      height: 200px;
+      margin-bottom: 20px;
+    }
+    .item-wrap {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      position: absolute;
+      left: 5px;
+      right: 67px;
+      bottom: 24px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.5);
+      button {
+        background: transparent;
+        border: none;
+        color: #fff;
+        /deep/ i {
+          font-size: 20px;
+        }
+      }
+    }
   }
   .pagination {
     margin-top: 20px;
