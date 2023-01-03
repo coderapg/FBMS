@@ -8,15 +8,15 @@
       </el-breadcrumb>
     </div>
     <!-- /面包屑导航 -->
-    <el-form ref="form" :model="form" label-width="60px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="60px">
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="标题">
+          <el-form-item label="标题" prop="title">
             <el-input v-model="form.title"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="频道">
+          <el-form-item label="频道" prop="channel_id">
             <el-select v-model="form.channel_id" placeholder="请选择频道">
               <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
@@ -25,8 +25,8 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="内容">
-            <el-tiptap :width="1400" :height="400" lang="zh" v-model="form.content" :extensions="extensions" />
+          <el-form-item label="内容" prop="content">
+            <el-tiptap placeholder="请输入内容" :width="1400" :height="400" lang="zh" v-model="form.content" :extensions="extensions" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -102,6 +102,30 @@ export default {
           type: 1
         },
         title: ''
+      },
+      // 添加表单验证规则
+      rules: {
+        title: [
+          { required: true, message: '请输入标题', trigger: 'blur' },
+          { min: 5, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur' }
+        ],
+        channel_id: [
+          { required: true, message: '请选择频道', trigger: 'change' }
+        ],
+        content: [
+          { required: true, message: '请输入内容', trigger: 'blur' }, // 防止在第一次未输入时直接提交
+          // 输入内容后再次清空时content内容会变成'<p></p>'
+          {
+            validator: (rule, value, callback) => {
+              if (value === '<p></p>') {
+                callback(new Error('请输入内容'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'blur'
+          }
+        ]
       },
       channels: [],
       articleId: '', // 编辑时存储当前文章的id
