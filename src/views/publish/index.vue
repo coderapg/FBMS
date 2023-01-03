@@ -88,7 +88,7 @@ import {
 // import element-tiptap 样式
 import 'element-tiptap/lib/index.css'
 
-import { getChannels, addArticle, getArticle, updateArticle } from 'https/article'
+import { getChannels, addArticle, getArticle, updateArticle, uploadRichImage } from 'https/article'
 
 export default {
   name: 'PublishIndex',
@@ -115,7 +115,21 @@ export default {
         new Italic(), // 斜体
         new Strike(), // 删除线
         new Underline({ bubble: true, menubar: false }), // 在气泡菜单而不在菜单栏中渲染菜单按钮
-        new Image(), // 插入图片
+        new Image({
+          uploadRequest (file) {
+            /**
+             * 一般文件上传的接口都要求把请求头中的 Content-Type 设置为 multipart/form-data，但是我们使用 axios 上传文件的话不需要手动设置，你只要给 data 一个 new FormData() 对象即可。
+             */
+            const fd = new FormData()
+            fd.append('image', file)
+            return uploadRichImage(fd).then(res => {
+              const { data: { data: { url } }, status } = res
+              if (status === 201) {
+                return url
+              }
+            })
+          }
+        }), // 插入图片
         new CodeBlock(), // 代码块
         new Blockquote(), // 引用
         new ListItem(),
