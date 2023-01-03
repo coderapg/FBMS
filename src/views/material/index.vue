@@ -21,8 +21,8 @@
             :src="item.url"
             fit="cover" />
           <div class="item-wrap" v-show="!collect">
-            <el-button icon="el-icon-star-off" circle size="mini"></el-button>
-            <el-button type="danger" icon="el-icon-delete" circle size="mini"></el-button>
+            <el-button :class="{ 'icon-cur': item.is_collected }" icon="el-icon-star-off" circle size="mini" :loading="item.isLoading" @click="handleItemCollect(item)" />
+            <el-button type="danger" icon="el-icon-delete" circle size="mini" :loading="item.isLoading"></el-button>
           </div>
         </el-col>
       </el-row>
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { getMaterialList } from 'https/material'
+import { getMaterialList, toggleItemCollect } from 'https/material'
 import { uploadRichImage } from 'https/images'
 
 export default {
@@ -90,6 +90,9 @@ export default {
       }).then(res => {
         const { data: { data: { results, total_count: totalCount } }, status } = res
         if (status === 200) {
+          results.map(item => {
+            item.isLoading = false
+          })
           this.totalCount = totalCount
           this.materialList = results
         }
@@ -126,6 +129,28 @@ export default {
     // 分页
     handleCurrentChange (page) {
       this.loadMaterialData(page)
+    },
+    // 收藏 / 取消收藏
+    handleItemCollect (item) {
+      item.isLoading = true
+      item.is_collected = !item.is_collected
+      toggleItemCollect(item.id, item.is_collected).then(res => {
+        const { status } = res
+        if (status === 201) {
+          item.isLoading = false
+          this.$message({
+            message: item.is_collected ? '收藏成功' : '取消成功',
+            type: 'success',
+            center: true
+          })
+        } else {
+          this.$message({
+            message: '操作失败',
+            type: 'error',
+            center: true
+          })
+        }
+      })
     }
   }
 }
@@ -161,6 +186,9 @@ export default {
         /deep/ i {
           font-size: 20px;
         }
+      }
+      .icon-cur {
+        color: #ff6700;
       }
     }
   }

@@ -11,3 +11,14 @@ export function getMaterialList (params) {
     params
   })
 }
+
+// 收藏 / 取消收藏
+export function toggleItemCollect (itemId, collect) {
+  return request({
+    method: 'PUT',
+    url: `/mp/v1_0/user/images/${itemId}`,
+    data: {
+      collect
+    }
+  })
+}
