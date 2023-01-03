@@ -29,8 +29,11 @@
             v-model="scope.row.comment_status"
             active-text="开启"
             inactive-text="关闭"
+            :active-value="true"
+            :inactive-value="false"
             active-color="#13ce66"
-            inactive-color="#ff4949" />
+            inactive-color="#ff4949"
+            @change="handleSwitchChange(scope.$index, scope.row)" />
         </template>
       </el-table-column>
     </el-table>
@@ -75,7 +78,6 @@ export default {
         per_page: this.pageSize,
         response_type: 'comment'
       }).then(res => {
-        console.log('加载', res)
         const { data: { data: { results, total_count: totalCount } }, status } = res
         if (status === 200) {
           this.totalCount = totalCount
@@ -83,12 +85,31 @@ export default {
         }
       })
     },
+    // 每页请求条数改变时
     handleSizeChange (val) {
       this.pageSize = val
       this.loadArticles(this.page)
     },
+    // 页码改变时
     handleCurrentChange (val) {
       this.loadArticles(val)
+    },
+    // 切换滑块
+    handleSwitchChange (index, row) {
+      // const { id } = row
+      const flag = row.comment_status
+      const title = flag ? '亲，您是否要打开当前文章评论功能。' : '亲，您是否要关闭当前文章评论功能，如果关闭读者将无法对这篇文章进行评论。'
+      row.comment_status = !row.comment_status // 保持switch点击前的状态
+      this.$confirm(title, '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        flag ? row.comment_status = true : row.comment_status = false // 这一步很重要，row.showState会根据flag的值开启或关闭开关
+        this.$message({ type: 'success', message: '修改成功!' })
+      }).catch(() => {
+        this.$message({ type: 'info', showClose: true, message: '已取消修改！' })
+      })
     }
   }
 }
