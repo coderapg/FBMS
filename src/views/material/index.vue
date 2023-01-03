@@ -15,10 +15,10 @@
       <el-button size="medium" type="primary" icon="el-icon-upload">上传</el-button>
     </div>
     <el-row :gutter="10">
-      <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+      <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4" v-for="item in materialList" :key="item.id">
         <el-image
-          style="height: 100px"
-          src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+          style="width: 200px; height: 200px; margin-bottom: 20px;"
+          :src="item.url"
           fit="cover" />
       </el-col>
     </el-row>
@@ -32,12 +32,31 @@
 </template>
 
 <script>
+import { getMaterialList } from 'https/material'
 
 export default {
   name: 'MaterialIndex',
   data () {
     return {
-      radio: false
+      radio: false,
+      materialList: []
+    }
+  },
+  created () {
+    this.loadMaterialData()
+  },
+  methods: {
+    loadMaterialData () {
+      getMaterialList({
+        collect: false,
+        page: 1,
+        per_page: 10
+      }).then(res => {
+        const { data: { data: { results } }, status } = res
+        if (status === 200) {
+          this.materialList = results
+        }
+      })
     }
   }
 }

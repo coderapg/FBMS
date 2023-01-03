@@ -3,7 +3,7 @@
  */
 import { request } from './request'
 
-// 富文本-上传图片
+// 上传图片
 export function uploadRichImage (imgUrl) {
   return request({
     method: 'POST',
