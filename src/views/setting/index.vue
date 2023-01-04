@@ -52,7 +52,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleDialogCancel">取消</el-button>
-        <el-button type="primary" @click="handleDialogCropper">裁切</el-button>
+        <el-button type="primary" :loading="cropperLoading" @click="handleDialogCropper">裁切</el-button>
       </span>
     </el-dialog>
     <!-- /dialog对话框 -->
@@ -95,7 +95,8 @@ export default {
       },
       previewImage: '', // 预览图片地址
       dialogVisible: false,
-      cropper: null
+      cropper: null,
+      cropperLoading: false
     }
   },
   created () {
@@ -161,12 +162,14 @@ export default {
     },
     // 确定裁切
     handleDialogCropper () {
+      this.cropperLoading = true
       this.cropper.getCroppedCanvas().toBlob(blob => {
         const fd = new FormData()
         fd.append('photo', blob)
         updatePhote(fd).then(res => {
-          console.log('上传成功', res)
+          // console.log('上传成功', res)
           const { data: { data: { photo } }, status } = res
+          console.log('photo', photo)
           if (status === 201) {
             this.$message({
               message: '头像修改成功',
@@ -174,7 +177,9 @@ export default {
               center: true
             })
             this.form.photo = photo
+            // this.form.photo = window.URL.createObjectURL(blob) // 使用这个能够更快的渲染到页面中，因为拿到photo是需要发送网络请求的，而这个方法不需要进行网络请求，是直接H5中的API获取的转blob格式后的地址
             this.dialogVisible = false
+            this.cropperLoading = false
           }
         })
       })
