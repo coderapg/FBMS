@@ -70,7 +70,13 @@ export default {
   },
   methods: {
     onSubmit () {
-      console.log('submit!')
+      this.$refs.form.validate((valid) => {
+        if (!valid) {
+          return false
+        } else {
+          console.log('submit!!')
+        }
+      })
     }
   }
 }
