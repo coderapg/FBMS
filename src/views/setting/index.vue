@@ -25,7 +25,7 @@
               <el-input type="textarea" placeholder="请输入媒体介绍" v-model="form.intro" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">保存设置</el-button>
+              <el-button type="primary" :loading="updateInfoLoading" @click="handleUpdateUserInfo">保存设置</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -65,7 +65,7 @@ import 'cropperjs/dist/cropper.css'
 import Cropper from 'cropperjs'
 
 import { getUserInfo } from 'https/user'
-import { updatePhote } from 'https/setting'
+import { updatePhote, updateUserInfo } from 'https/setting'
 
 export default {
   name: 'SettingIndex',
@@ -96,7 +96,8 @@ export default {
       previewImage: '', // 预览图片地址
       dialogVisible: false,
       cropper: null,
-      cropperLoading: false
+      cropperLoading: false,
+      updateInfoLoading: false
     }
   },
   created () {
@@ -111,12 +112,26 @@ export default {
         }
       })
     },
-    onSubmit () {
+    // 更新用户资料
+    handleUpdateUserInfo () {
       this.$refs.form.validate((valid) => {
         if (!valid) {
           return false
-        } else {
         }
+        this.updateInfoLoading = true
+        const { email, intro, name } = this.form
+        const info = Object.assign({}, { email, intro, name })
+        updateUserInfo(info).then(res => {
+          const { status } = res
+          if (status === 201) {
+            this.$message({
+              message: '保存个人信息成功',
+              type: 'success',
+              center: true
+            })
+            this.updateInfoLoading = false
+          }
+        })
       })
     },
     // 选择图片

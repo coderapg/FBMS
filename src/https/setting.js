@@ -11,3 +11,12 @@ export function updatePhote (blob) {
     data: blob
   })
 }
+
+// 更新用户资料
+export function updateUserInfo (info) {
+  return request({
+    method: 'PATCH',
+    url: '/mp/v1_0/user/profile',
+    data: info
+  })
+}
