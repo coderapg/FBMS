@@ -41,17 +41,31 @@
     </el-card>
     <!-- dialog对话框 -->
     <el-dialog
+      class="preview-dialog"
       title="修改头像"
       :visible="dialogVisible"
-      append-to-body>
-      <el-image style="width: 200px;" :src="previewImage" fit="cover" />
+      append-to-body
+      @opened="handleDialogOpened"
+      @closed="handleDialogClosed">
+      <div class="preview-image-wrap">
+        <img ref="previewImage" class="preview-image" style="width: 200px;" :src="previewImage" fit="cover" />
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleDialogCancel">取消</el-button>
+        <el-button type="primary" @click="handleDialogCropper">裁切</el-button>
+      </span>
     </el-dialog>
     <!-- /dialog对话框 -->
   </div>
 </template>
 
 <script>
+// 引入图片裁切工具
+import 'cropperjs/dist/cropper.css'
+import Cropper from 'cropperjs'
+
 import { getUserInfo } from 'https/user'
+import { updatePhote } from 'https/setting'
 
 export default {
   name: 'SettingIndex',
@@ -80,7 +94,8 @@ export default {
         ]
       },
       previewImage: '', // 预览图片地址
-      dialogVisible: false
+      dialogVisible: false,
+      cropper: null
     }
   },
   created () {
@@ -109,8 +124,60 @@ export default {
       const file = this.$refs.file
       const blobData = window.URL.createObjectURL(file.files[0])
       this.previewImage = blobData
+
       // 解决选择相同文件不触发 change 事件的bug
       this.$refs.file.value = ''
+    },
+    // 对话框完全打开时
+    handleDialogOpened () {
+      /**
+       * 图片裁切器必须基于 img 进行初始化。注意：img 必须是可见状态才能正常初始化 cropper (也就是说必须现有 img 然后再基于 img 创建 cropper)
+       */
+      if (this.cropper) {
+        this.cropper.replace(this.previewImage) // 方式一
+        return
+      }
+      const image = this.$refs.previewImage // 获取 DOM 节点
+      this.cropper = new Cropper(image, { // 初始化裁切器
+        aspectRatio: 1, // 定义裁剪框的固定纵横比 1 : 1
+        cropBoxResizable: false, // 不允许改变裁切框的大小
+        // cropBoxMovable: false // 不允许拖动裁切框
+        dragMode: 'none', // 不允许裁切器自动变化 / 不允许移动图片
+        viewMode: 1 //  限制裁剪框不超过画布的大小
+      })
+    },
+    // 对话框完全关闭时-重置图片裁切(如果选择相同的图片那么图片裁切器不会触发)
+    handleDialogClosed () {
+      /**
+       * 第1次初始化好以后，如果预览裁切的图片发生了变化，裁切器默认不会跟新。所以我们需要在对话框关闭后手动初始化一下 cropper 裁切器
+       * 手动初始化裁切器方式一： 执行 cropper.replace(图片地址) 方法
+       * 手动初始化裁切器方式二： 执行 this.cropper.destroy() (销毁 cropper，重新初始化 cropper。该方法会消耗性能)
+       */
+      // this.cropper.destroy() // 方式二
+    },
+    // 取消对话框
+    handleDialogCancel () {
+      this.dialogVisible = false
+    },
+    // 确定裁切
+    handleDialogCropper () {
+      this.cropper.getCroppedCanvas().toBlob(blob => {
+        const fd = new FormData()
+        fd.append('photo', blob)
+        updatePhote(fd).then(res => {
+          console.log('上传成功', res)
+          const { data: { data: { photo } }, status } = res
+          if (status === 201) {
+            this.$message({
+              message: '头像修改成功',
+              type: 'success',
+              center: true
+            })
+            this.form.photo = photo
+            this.dialogVisible = false
+          }
+        })
+      })
     }
   }
 }
@@ -128,6 +195,19 @@ export default {
         font-size: 18px;
         color: #000;
         line-height: 20px;
+      }
+    }
+  }
+  .preview-dialog {
+    /deep/ .el-dialog {
+      min-width: 400px;
+      max-width: 600px;
+      .preview-image-wrap {
+        .preview-image {
+          display: block;
+          max-width: 100%;
+          height: 300px;
+        }
       }
     }
   }
