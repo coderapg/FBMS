@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card>
     <!-- 面包屑导航 -->
     <div slot="header" class="clearfix">
       <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -10,7 +10,7 @@
     <!-- /面包屑导航 -->
     <!-- 表单 -->
     <el-row :gutter="10">
-      <el-col :xs="18" :sm="18" :md="18" :lg="18" :xl="18">
+      <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="编号">123</el-form-item>
           <el-form-item label="手机号">17860143911</el-form-item>
@@ -28,9 +28,9 @@
           </el-form-item>
         </el-form>
       </el-col>
-      <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :offset="1" class="row-avatar">
+      <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :offset="3" class="row-avatar">
         <label for="upload">
-          <el-avatar :size="150" :src="circleUrl"></el-avatar>
+          <el-avatar :size="200" :src="circleUrl"></el-avatar>
           <p>修改头像</p>
         </label>
         <input type="file" id="upload" hidden>
