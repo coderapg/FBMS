@@ -90,7 +90,7 @@ export default {
         ],
         name: [
           { required: true, message: '请输入媒体名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 1, max: 7, message: '长度在 1 到 7 个字符', trigger: 'blur' }
         ]
       },
       previewImage: '', // 预览图片地址
