@@ -16,6 +16,6 @@ export function login (config) {
 export function getUserInfo () {
   return request({
     method: 'GET',
-    url: '/app/v1_0/user/profile'
+    url: '/mp/v1_0/user/profile'
   })
 }

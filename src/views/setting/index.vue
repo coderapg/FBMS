@@ -12,8 +12,8 @@
     <el-row :gutter="10">
       <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-form-item label="编号">123</el-form-item>
-          <el-form-item label="手机号">17860143911</el-form-item>
+          <el-form-item label="编号">{{ form.id }}</el-form-item>
+          <el-form-item label="手机号">{{ form.mobile }}</el-form-item>
           <el-form-item label="邮箱" prop="email">
             <el-input placeholder="请输入邮箱地址" v-model="form.email"></el-input>
           </el-form-item>
@@ -41,34 +41,49 @@
 </template>
 
 <script>
+import { getUserInfo } from 'https/user'
 
 export default {
   name: 'SettingIndex',
   data () {
     return {
       form: {
-        name: '',
+        email: '',
+        id: '',
         intro: '',
-        email: ''
+        mobile: '',
+        name: '',
+        photo: ''
       },
       rules: {
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ],
-        name: [
-          { required: true, message: '请输入媒体名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
         intro: [
           { required: true, message: '请输入媒体名称', trigger: 'blur' },
           { min: 5, max: 300, message: '长度在 5 到 300 个字符', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入媒体名称', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ]
       },
       circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
     }
   },
+  created () {
+    this.loadUserInfo()
+  },
   methods: {
+    loadUserInfo () {
+      getUserInfo().then(res => {
+        const { data: { data }, status } = res
+        if (status === 200) {
+          this.form = data
+        }
+      })
+    },
     onSubmit () {
       this.$refs.form.validate((valid) => {
         if (!valid) {
