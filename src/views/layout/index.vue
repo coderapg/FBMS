@@ -12,7 +12,7 @@
         <div class="header-right">
           <el-dropdown>
             <span class="el-dropdown-link avatar-wrap">
-              <img :src="user.phote" alt="">
+              <img :src="user.photo" alt="">
               <span>{{ user.name }}</span>
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
@@ -45,7 +45,10 @@ export default {
   name: 'LayoutIndex',
   data () {
     return {
-      user: {},
+      user: {
+        name: '',
+        photo: ''
+      },
       isCollapse: false // 是否折叠收起菜单
     }
   },
@@ -59,6 +62,12 @@ export default {
   },
   created () {
     this.loadUserInfo()
+
+    // 更新顶部导航栏头像和昵称信息
+    this.$eventBus.$on('updateUser', data => {
+      const { name, photo } = data
+      this.user = Object.assign({}, { name, photo })
+    })
   },
   methods: {
     loadUserInfo () {

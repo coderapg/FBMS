@@ -13,6 +13,9 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
+// 添加事件总线
+Vue.prototype.$eventBus = new Vue()
+
 new Vue({
   router,
   render: h => h(App)

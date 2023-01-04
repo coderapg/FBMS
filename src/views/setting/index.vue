@@ -124,6 +124,9 @@ export default {
         updateUserInfo(info).then(res => {
           const { status } = res
           if (status === 201) {
+            // 更新顶部导航栏头像和昵称信息
+            this.$eventBus.$emit('updateUser', this.form)
+
             this.$message({
               message: '保存个人信息成功',
               type: 'success',
@@ -182,9 +185,7 @@ export default {
         const fd = new FormData()
         fd.append('photo', blob)
         updatePhote(fd).then(res => {
-          // console.log('上传成功', res)
           const { data: { data: { photo } }, status } = res
-          console.log('photo', photo)
           if (status === 201) {
             this.$message({
               message: '头像修改成功',
@@ -195,6 +196,8 @@ export default {
             // this.form.photo = window.URL.createObjectURL(blob) // 使用这个能够更快的渲染到页面中，因为拿到photo是需要发送网络请求的，而这个方法不需要进行网络请求，是直接H5中的API获取的转blob格式后的地址
             this.dialogVisible = false
             this.cropperLoading = false
+            // 更新顶部导航栏头像和昵称信息
+            this.$eventBus.$emit('updateUser', this.form)
           }
         })
       })
