@@ -45,8 +45,8 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page.sync="page"
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="pageSize"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size.sync="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="totalCount" />
     <!-- /分页 -->
@@ -87,9 +87,8 @@ export default {
       })
     },
     // 每页请求条数改变时
-    handleSizeChange (val) {
-      this.pageSize = val
-      this.loadArticles(this.page)
+    handleSizeChange () {
+      this.loadArticles(1)
     },
     // 页码改变时
     handleCurrentChange (val) {
