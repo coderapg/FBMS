@@ -93,8 +93,7 @@ export default {
 
         // 登录成功后跳转到首页
         this.$router.push('/')
-      }).catch(err => {
-        console.log('登录失败', err)
+      }).catch(() => {
         this.$message.error('登录失败，手机号或验证码错误')
         this.isLoading = false
       })

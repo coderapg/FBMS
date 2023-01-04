@@ -100,7 +100,6 @@ export default {
         if (!valid) {
           return false
         } else {
-          console.log('submit!!')
         }
       })
     },
