@@ -39,6 +39,9 @@
               <el-radio :label="0">无图</el-radio>
               <el-radio :label="-1">自动</el-radio>
             </el-radio-group>
+            <template v-if="form.cover.type > 0">
+              <upload-cover v-for="(item, index) in form.cover.type" :key="index" :current-cover="form.cover.images[index]" @handleEmitUrl="handleEmitUrl($event, index)" />
+            </template>
           </el-form-item>
         </el-col>
       </el-row>
@@ -87,6 +90,7 @@ import {
 } from 'element-tiptap'
 // import element-tiptap 样式
 import 'element-tiptap/lib/index.css'
+import UploadCover from './components/UploadCover'
 
 import { getChannels, addArticle, getArticle, updateArticle } from 'https/article'
 import { uploadRichImage } from 'https/images'
@@ -177,7 +181,8 @@ export default {
     }
   },
   components: {
-    'el-tiptap': ElementTiptap
+    'el-tiptap': ElementTiptap,
+    UploadCover
   },
   created () {
     this.loadChannels()
@@ -243,6 +248,13 @@ export default {
       })
       // 添加完成后跳转到文章页面
       this.$router.push('/article')
+    },
+    // 接收子组件传递过来的参数
+    handleEmitUrl (event, index) {
+      console.log('url===', event, index)
+      // 通知父组件接受返回的图片路径参数
+      // this.$emit('handleEmitUrl', url)
+      this.form.cover.images[index] = event
     }
   }
 }
