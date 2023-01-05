@@ -8,11 +8,11 @@
       <el-button size="medium" type="primary" icon="el-icon-upload" @click="handleDialog" v-if="updateBtnShow">上传</el-button>
     </div>
     <el-row :gutter="10">
-      <el-col class="item-image" :xs="12" :sm="8" :md="8" :lg="6" :xl="4" v-for="(item, index) in materialList" :key="item.id" @click.native="handleColItemClick(index, item)">
+      <el-col class="item-image" :xs="12" :sm="8" :md="8" :lg="6" :xl="4" v-for="(item, index) in materialList" :key="item.id" @click.native="handleColItemClick(index)">
         <el-image
           :src="item.url"
           fit="cover" />
-        <div class="bg-img" v-show="activeIndex === index"></div>
+        <div class="bg-img" v-show="isShowBg && activeIndex === index"></div>
         <template v-if="iconShow">
           <div class="item-wrap" v-show="!collect">
             <el-button :class="{ 'icon-cur': item.is_collected }" icon="el-icon-star-off" circle size="mini" :loading="item.isLoading" @click="handleItemCollect(item)" />
@@ -78,6 +78,10 @@ export default {
     iconShow: {
       type: Boolean,
       default: true
+    },
+    isShowBg: {
+      type: Boolean,
+      default: false
     }
   },
   created () {
@@ -176,8 +180,7 @@ export default {
       })
     },
     // 被点击的子项
-    handleColItemClick (index, item) {
-      console.log('子项', index, item)
+    handleColItemClick (index) {
       this.activeIndex = index
     }
   }

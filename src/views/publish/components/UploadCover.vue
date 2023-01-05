@@ -15,7 +15,7 @@
         :visible.sync="dialogVisible">
         <el-tabs type="card" v-model="activeName">
           <el-tab-pane label="素材库" name="first">
-            <image-list :update-btn-show="false" :icon-show="false" />
+            <image-list ref="imageList" :update-btn-show="false" :icon-show="false" is-show-bg />
           </el-tab-pane>
           <el-tab-pane label="上传图片" name="second">
             <input ref="file" type="file" name="" id="" @change="handleFileChange">
@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       dialogVisible: false,
-      activeName: 'second',
+      activeName: 'first',
       previewImg: '' // 预览图片地址
     }
   },
@@ -95,6 +95,20 @@ export default {
             this.$emit('handleEmitUrl', url)
           }
         })
+      } else if (this.activeName === 'first') {
+        const imgRef = this.$refs.imageList
+        const activeIndex = imgRef.activeIndex
+        if (activeIndex === null) {
+          this.$message({
+            type: 'error',
+            message: '请选择封面'
+          })
+          return
+        }
+        const materialList = imgRef.materialList
+        const materialListImgUrl = materialList[activeIndex].url
+        this.dialogVisible = false
+        this.$emit('input', materialListImgUrl)
       }
     }
   }
