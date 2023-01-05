@@ -39,6 +39,9 @@
               <el-radio :label="0">无图</el-radio>
               <el-radio :label="-1">自动</el-radio>
             </el-radio-group>
+            <div class="cover-wrap" v-if="form.cover.type > 0">
+              <publish-cover v-for="item in form.cover.type" :key="item" />
+            </div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -87,6 +90,7 @@ import {
 } from 'element-tiptap'
 // import element-tiptap 样式
 import 'element-tiptap/lib/index.css'
+import PublishCover from './components/PublishCover'
 
 import { getChannels, addArticle, getArticle, updateArticle } from 'https/article'
 import { uploadRichImage } from 'https/images'
@@ -177,7 +181,8 @@ export default {
     }
   },
   components: {
-    'el-tiptap': ElementTiptap
+    'el-tiptap': ElementTiptap,
+    PublishCover
   },
   created () {
     this.loadChannels()
@@ -254,4 +259,9 @@ export default {
   //     width: 400px;
   //   }
   // }
+  .cover-wrap {
+    display: flex;
+    align-items: center;
+    width: 600px;
+  }
 </style>
