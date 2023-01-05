@@ -65,8 +65,8 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  routes,
-  mode: 'history'
+  routes
+  // mode: 'history'
 })
 
 // 添加路由导航守卫

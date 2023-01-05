@@ -1,7 +1,7 @@
 <template>
   <el-menu
     router
-    default-active="/"
+    :default-active="$route.path"
     :collapse="isCollapse"
     background-color="#002033"
     text-color="#fff"
