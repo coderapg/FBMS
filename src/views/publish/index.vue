@@ -40,7 +40,8 @@
               <el-radio :label="-1">自动</el-radio>
             </el-radio-group>
             <template v-if="form.cover.type > 0">
-              <upload-cover v-for="(item, index) in form.cover.type" :key="index" :current-cover="form.cover.images[index]" @handleEmitUrl="handleEmitUrl($event, index)" />
+              <!-- <upload-cover v-for="(item, index) in form.cover.type" :key="index" :current-cover="form.cover.images[index]" @handleEmitUrl="handleEmitUrl($event, index)" /> -->
+              <upload-cover v-for="(item, index) in form.cover.type" :key="index" v-model="form.cover.images[index]" />
             </template>
           </el-form-item>
         </el-col>
@@ -251,9 +252,7 @@ export default {
     },
     // 接收子组件传递过来的参数
     handleEmitUrl (event, index) {
-      console.log('url===', event, index)
-      // 通知父组件接受返回的图片路径参数
-      // this.$emit('handleEmitUrl', url)
+      // 父组件接受返回的图片路径参数
       this.form.cover.images[index] = event
     }
   }

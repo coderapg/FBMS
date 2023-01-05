@@ -1,15 +1,22 @@
 <template>
   <div class="upload-cover" @click="handleCoverSelect">
     <div class="cover-wrap">
+      <!-- <img
+        class="cover-image"
+        ref="coverImage"
+        :src="currentCover" /> -->
       <img
         class="cover-image"
         ref="coverImage"
-        :src="currentCover" />
+        :src="value" />
       <el-dialog
         append-to-body
+        width="80%"
         :visible.sync="dialogVisible">
         <el-tabs type="card" v-model="activeName">
-          <el-tab-pane label="素材库" name="first">用户管理</el-tab-pane>
+          <el-tab-pane label="素材库" name="first">
+            <image-list :update-btn-show="false" :icon-show="false" />
+          </el-tab-pane>
           <el-tab-pane label="上传图片" name="second">
             <input ref="file" type="file" name="" id="" @change="handleFileChange">
             <img :src="previewImg" alt="">
@@ -27,6 +34,8 @@
 <script>
 import { uploadRichImage } from 'https/images'
 
+import ImageList from 'components/ImageList/'
+
 export default {
   name: 'UploadCover',
   data () {
@@ -36,8 +45,15 @@ export default {
       previewImg: '' // 预览图片地址
     }
   },
+  components: {
+    ImageList
+  },
   props: {
-    currentCover: {
+    // currentCover: {
+    //   type: String,
+    //   default: ''
+    // }
+    value: {
       type: String,
       default: ''
     }
@@ -71,7 +87,6 @@ export default {
         const fd = new FormData()
         fd.append('image', file)
         uploadRichImage(fd).then(res => {
-          console.log('上传图片', res)
           const { data: { data: { url } }, status } = res
           if (status === 201) {
             this.$refs.coverImage.src = url
