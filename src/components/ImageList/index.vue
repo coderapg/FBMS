@@ -8,10 +8,11 @@
       <el-button size="medium" type="primary" icon="el-icon-upload" @click="handleDialog" v-if="updateBtnShow">上传</el-button>
     </div>
     <el-row :gutter="10">
-      <el-col class="item-image" :xs="12" :sm="8" :md="8" :lg="6" :xl="4" v-for="item in materialList" :key="item.id">
+      <el-col class="item-image" :xs="12" :sm="8" :md="8" :lg="6" :xl="4" v-for="(item, index) in materialList" :key="item.id" @click.native="handleColItemClick(index, item)">
         <el-image
           :src="item.url"
           fit="cover" />
+        <div class="bg-img" v-show="activeIndex === index"></div>
         <template v-if="iconShow">
           <div class="item-wrap" v-show="!collect">
             <el-button :class="{ 'icon-cur': item.is_collected }" icon="el-icon-star-off" circle size="mini" :loading="item.isLoading" @click="handleItemCollect(item)" />
@@ -65,7 +66,8 @@ export default {
       fileList: [], // 图片上传的数组
       totalCount: 0, // 总条数
       pageSize: 10, // 每页请求条数
-      page: 1 // 当前高亮的代码页
+      page: 1, // 当前高亮的代码页
+      activeIndex: null // 被点击时的子项
     }
   },
   props: {
@@ -172,6 +174,11 @@ export default {
           this.loadMaterialData(this.page)
         }
       })
+    },
+    // 被点击的子项
+    handleColItemClick (index, item) {
+      console.log('子项', index, item)
+      this.activeIndex = index
     }
   }
 }
@@ -189,6 +196,16 @@ export default {
       width: 200px;
       height: 200px;
       margin-bottom: 20px;
+    }
+    .bg-img {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: url('./selected.png') no-repeat center center;
+      background-size: 40%;
+      z-index: 9;
     }
     .item-wrap {
       display: flex;
